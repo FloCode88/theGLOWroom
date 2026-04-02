@@ -2,410 +2,446 @@
 <html lang="de">
 <head>
 <meta charset="UTF-8">
-<meta name="viewport" content="width=device-width, initial-scale=1.0">
-<title>theGLOWroom — Terminplan Mieterausbau</title>
+<meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
+<meta name="apple-mobile-web-app-capable" content="yes">
+<meta name="apple-mobile-web-app-status-bar-style" content="black-translucent">
+<meta name="apple-mobile-web-app-title" content="GLOWroom">
+<meta name="theme-color" content="#0F172A">
+<meta name="mobile-web-app-capable" content="yes">
+<title>theGLOWroom — Terminplan</title>
+<link rel="icon" href="data:image/svg+xml,<svg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 100 100'><rect rx='20' width='100' height='100' fill='%230F172A'/><text x='50' y='62' text-anchor='middle' font-size='44' fill='%23F59E0B'>G</text></svg>">
+<link rel="apple-touch-icon" href="data:image/svg+xml,<svg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 180 180'><rect width='180' height='180' rx='40' fill='%230F172A'/><text x='90' y='112' text-anchor='middle' font-size='80' font-weight='bold' fill='%23F59E0B'>G</text></svg>">
 <link href="https://fonts.googleapis.com/css2?family=DM+Sans:wght@400;500;600;700&family=JetBrains+Mono:wght@400;500&display=swap" rel="stylesheet">
 <style>
-  * { box-sizing: border-box; margin: 0; padding: 0; }
-  body { font-family: 'DM Sans', 'Segoe UI', sans-serif; background: #0F172A; color: #E2E8F0; overflow-x: hidden; }
-  ::-webkit-scrollbar { height: 8px; width: 6px; }
-  ::-webkit-scrollbar-track { background: #1E293B; border-radius: 4px; }
-  ::-webkit-scrollbar-thumb { background: #475569; border-radius: 4px; }
-  ::-webkit-scrollbar-thumb:hover { background: #64748B; }
+*{box-sizing:border-box;margin:0;padding:0;-webkit-tap-highlight-color:transparent}
+html,body{overscroll-behavior:none}
+body{font-family:'DM Sans','Segoe UI',sans-serif;background:#0F172A;color:#E2E8F0;min-height:100dvh;padding-bottom:env(safe-area-inset-bottom)}
+::-webkit-scrollbar{height:4px;width:4px}
+::-webkit-scrollbar-track{background:#1E293B}
+::-webkit-scrollbar-thumb{background:#475569;border-radius:4px}
+@keyframes fadeIn{from{opacity:0;transform:translateY(6px)}to{opacity:1;transform:translateY(0)}}
+@keyframes pulse{0%,100%{opacity:.7}50%{opacity:1}}
+@keyframes slideDown{from{opacity:0;max-height:0}to{opacity:1;max-height:600px}}
+a{color:inherit;text-decoration:none}
 
-  @keyframes fadeIn { from { opacity: 0; transform: translateY(-4px); } to { opacity: 1; transform: translateY(0); } }
-  @keyframes pulse { 0%,100% { opacity: 1; } 50% { opacity: 0.5; } }
-  @keyframes glow { 0%,100% { box-shadow: 0 0 6px #EF444440; } 50% { box-shadow: 0 0 14px #EF444480; } }
+/* NAV TABS */
+.nav{position:fixed;bottom:0;left:0;right:0;z-index:100;background:#1E293B;border-top:1px solid #334155;display:flex;padding-bottom:env(safe-area-inset-bottom)}
+.nav-btn{flex:1;display:flex;flex-direction:column;align-items:center;gap:3px;padding:10px 0 8px;border:none;background:none;color:#64748B;font-size:10px;font-weight:600;font-family:inherit;cursor:pointer;transition:color .2s}
+.nav-btn.active{color:#3B82F6}
+.nav-btn svg{width:22px;height:22px;stroke:currentColor;stroke-width:2;fill:none}
 
-  .header { background: linear-gradient(135deg, #1E293B 0%, #0F172A 100%); border-bottom: 1px solid #334155; padding: 20px 24px; }
-  .header-top { display: flex; align-items: center; justify-content: space-between; flex-wrap: wrap; gap: 12px; }
-  .header-label { display: flex; align-items: center; gap: 10px; margin-bottom: 4px; }
-  .header-dot { width: 8px; height: 8px; border-radius: 50%; background: #22C55E; box-shadow: 0 0 8px #22C55E; }
-  .header-sub { font-size: 11px; font-weight: 600; letter-spacing: 2px; text-transform: uppercase; color: #94A3B8; }
-  .header-title { font-size: 26px; font-weight: 700; color: #F8FAFC; letter-spacing: -0.5px; }
-  .header-addr { font-size: 13px; color: #64748B; margin-top: 2px; }
-  .header-actions { display: flex; gap: 8px; flex-wrap: wrap; }
-  .info-box { background: #1E293B; border: 1px solid #334155; border-radius: 10px; padding: 10px 16px; text-align: center; }
-  .info-label { font-size: 11px; color: #64748B; font-weight: 500; margin-bottom: 2px; }
-  .info-value { font-size: 14px; font-weight: 600; color: #F8FAFC; }
-  .info-value.gold { color: #F59E0B; }
+/* HEADER */
+.hdr{background:linear-gradient(135deg,#1E293B,#0F172A);padding:16px 16px 14px;border-bottom:1px solid #334155;position:sticky;top:0;z-index:50}
+.hdr-row{display:flex;align-items:center;justify-content:space-between}
+.hdr-label{font-size:10px;font-weight:600;letter-spacing:1.5px;text-transform:uppercase;color:#64748B;margin-bottom:2px}
+.hdr-title{font-size:22px;font-weight:700;color:#F8FAFC;letter-spacing:-.5px;display:flex;align-items:center;gap:8px}
+.hdr-title .dot{width:8px;height:8px;border-radius:50%;background:#22C55E;box-shadow:0 0 8px #22C55E;flex-shrink:0}
+.hdr-addr{font-size:12px;color:#475569;margin-top:2px}
+.hdr-badges{display:flex;gap:6px;margin-top:10px}
+.badge{background:#0F172A;border:1px solid #334155;border-radius:10px;padding:8px 14px;text-align:center;flex:1}
+.badge-label{font-size:10px;color:#64748B;font-weight:500}
+.badge-val{font-size:15px;font-weight:700;color:#F8FAFC;margin-top:1px}
+.badge-val.gold{color:#F59E0B}
 
-  .btn { background: #1E293B; border: 1px solid #334155; border-radius: 10px; padding: 10px 16px; cursor: pointer; color: #94A3B8; font-size: 13px; font-weight: 600; font-family: inherit; transition: all 0.2s; }
-  .btn:hover { background: #334155; }
-  .btn.active { background: #3B82F6; border-color: #3B82F6; color: #fff; }
+/* COUNTDOWN */
+.countdown{display:flex;gap:6px;margin-top:10px}
+.cd-box{flex:1;background:#F59E0B12;border:1px solid #F59E0B30;border-radius:10px;padding:8px 0;text-align:center}
+.cd-num{font-size:22px;font-weight:700;color:#F59E0B;font-family:'JetBrains Mono',monospace}
+.cd-lbl{font-size:9px;color:#F59E0B90;font-weight:600;text-transform:uppercase;letter-spacing:1px}
 
-  .status-banner { padding: 14px 24px; border-bottom: 1px solid #1E293B; animation: fadeIn 0.3s ease; }
-  .status-date { display: flex; align-items: center; gap: 10px; margin-bottom: 10px; flex-wrap: wrap; }
-  .status-date-dot { width: 10px; height: 10px; border-radius: 50%; flex-shrink: 0; }
-  .status-date-dot.live { background: #EF4444; animation: pulse 2s ease infinite; }
-  .status-date-dot.future { background: #F59E0B; }
-  .status-date-dot.done { background: #22C55E; }
-  .status-date-text { font-size: 14px; font-weight: 600; color: #F8FAFC; }
-  .status-date-sub { font-size: 12px; color: #64748B; margin-left: 4px; }
-  .status-tag { font-size: 11px; padding: 2px 8px; border-radius: 4px; font-weight: 600; }
-  .status-chips { display: flex; gap: 8px; flex-wrap: wrap; }
-  .status-chip { display: flex; align-items: center; gap: 6px; padding: 6px 14px; border-radius: 8px; font-size: 12px; font-weight: 600; border: 1px solid; }
-  .status-chip .chip-dot { width: 7px; height: 7px; border-radius: 50%; flex-shrink: 0; animation: pulse 2s ease infinite; }
-  .status-chip-contact { font-size: 11px; font-weight: 400; color: #94A3B8; margin-left: 2px; }
-  .status-chip-tasks { font-size: 10px; font-weight: 400; color: #94A3B8; margin-left: 4px; }
-  .status-none { font-size: 13px; color: #64748B; font-style: italic; }
-  .status-countdown { font-size: 12px; color: #94A3B8; background: #1E293B; border: 1px solid #334155; border-radius: 8px; padding: 6px 14px; display: inline-flex; align-items: center; gap: 6px; }
-  .status-countdown strong { color: #F59E0B; font-weight: 700; }
+/* VIEWS */
+.view{display:none;padding-bottom:80px}
+.view.active{display:block}
 
-  .contacts { margin-top: 16px; display: grid; grid-template-columns: repeat(auto-fill, minmax(280px, 1fr)); gap: 10px; animation: fadeIn 0.2s ease; }
-  .contact-card { background: #0F172A; border-radius: 10px; padding: 12px 16px; display: flex; flex-direction: column; gap: 4px; }
-  .contact-cat { font-size: 11px; font-weight: 600; text-transform: uppercase; letter-spacing: 1px; }
-  .contact-name { font-size: 14px; font-weight: 600; color: #F8FAFC; }
-  .contact-phone { font-size: 13px; color: #64748B; text-decoration: none; font-family: 'JetBrains Mono', monospace; }
-  .contact-company { font-size: 11px; color: #475569; }
+/* TIMELINE VIEW */
+.tl-section{margin:12px 12px 0;animation:fadeIn .25s ease}
+.tl-cat-header{display:flex;align-items:center;gap:8px;padding:10px 14px;border-radius:12px;cursor:pointer;transition:background .15s;-webkit-user-select:none;user-select:none}
+.tl-cat-header:active{transform:scale(.98)}
+.tl-cat-dot{width:12px;height:12px;border-radius:4px;flex-shrink:0}
+.tl-cat-name{font-size:14px;font-weight:700;flex:1}
+.tl-cat-arrow{font-size:10px;transition:transform .2s;opacity:.5}
+.tl-cat-arrow.open{transform:rotate(90deg)}
+.tl-cat-contact{font-size:11px;color:#64748B;margin-top:1px}
+.tl-tasks{overflow:hidden;transition:max-height .3s ease}
+.tl-task{padding:6px 14px 6px 36px;display:flex;align-items:center;gap:10px;animation:fadeIn .2s ease}
+.tl-task-name{font-size:12px;color:#94A3B8;flex:1;min-width:0;overflow:hidden;text-overflow:ellipsis;white-space:nowrap}
+.tl-task-bar-wrap{width:120px;height:14px;background:#1E293B;border-radius:7px;overflow:hidden;flex-shrink:0;position:relative}
+.tl-task-bar{height:100%;border-radius:7px;transition:width .4s ease}
+.tl-task-dates{font-size:10px;color:#475569;font-family:'JetBrains Mono',monospace;white-space:nowrap}
 
-  .legend { padding: 12px 24px; display: flex; gap: 16px; flex-wrap: wrap; align-items: center; border-bottom: 1px solid #1E293B; }
-  .legend-item { display: flex; align-items: center; gap: 6px; font-size: 12px; font-weight: 500; color: #CBD5E1; background: none; border: none; cursor: pointer; transition: all 0.2s; font-family: inherit; }
-  .legend-item.dimmed { opacity: 0.3; color: #475569; }
-  .legend-dot { width: 10px; height: 10px; border-radius: 3px; display: inline-block; }
-  .legend-reset { font-size: 11px; color: #64748B; background: #1E293B; border: 1px solid #334155; border-radius: 6px; padding: 3px 10px; cursor: pointer; font-family: inherit; }
+/* GANTT VIEW */
+.gantt-outer{overflow:hidden;margin-top:8px}
+.gantt-scroll{overflow-x:auto;-webkit-overflow-scrolling:touch;padding-bottom:12px}
+.gantt-months{display:flex;height:24px}
+.gantt-months div{display:flex;align-items:center;justify-content:center;font-size:11px;font-weight:700;color:#94A3B8;letter-spacing:1px;text-transform:uppercase}
+.gantt-days{display:flex;height:32px}
+.g-day{display:flex;flex-direction:column;align-items:center;justify-content:center;font-size:9px;position:relative}
+.g-day .dn{font-family:'JetBrains Mono',monospace;font-weight:500}
+.g-day .dw{font-size:8px;color:#475569}
+.g-day.today{background:#3B82F620}
+.g-day.today .dn,.g-day.today .dw{color:#60A5FA;font-weight:700}
+.g-day.nonwork{background:#0D111A}
+.g-day.nonwork .dn,.g-day.nonwork .dw{color:#1E293B}
+.g-day.opening::after{content:'';position:absolute;top:0;left:50%;transform:translateX(-50%);width:14px;height:2px;background:#F59E0B;border-radius:1px}
 
-  .gantt-wrapper { display: flex; overflow: hidden; }
-  .task-col { min-width: 240px; max-width: 240px; flex-shrink: 0; border-right: 1px solid #1E293B; z-index: 2; background: #0F172A; }
-  .timeline-col { flex: 1; overflow-x: auto; overflow-y: hidden; position: relative; }
+.g-cat-row{display:flex;height:28px}
+.g-task-row{display:flex;height:24px;position:relative}
+.g-cell{height:100%}
+.g-bar{position:absolute;top:3px;height:18px;border-radius:6px;cursor:default;transition:filter .1s}
+.g-today-line{position:absolute;top:0;width:2px;height:100%;background:#3B82F6;opacity:.5;pointer-events:none}
+.g-open-line{position:absolute;top:0;width:2px;height:100%;background:#F59E0B;opacity:.3;pointer-events:none}
 
-  .month-spacer { height: 28px; border-bottom: 1px solid #1E293B; }
-  .day-spacer { height: 36px; border-bottom: 1px solid #334155; }
+.g-label-col{min-width:160px;max-width:160px;flex-shrink:0;border-right:1px solid #1E293B;background:#0F172A;z-index:2}
+.g-label-spacer-m{height:24px;border-bottom:1px solid #1E293B}
+.g-label-spacer-d{height:32px;border-bottom:1px solid #334155}
+.g-label-cat{height:28px;display:flex;align-items:center;gap:6px;padding:0 10px;font-size:11px;font-weight:700;border-bottom:1px solid #1E293B;cursor:pointer}
+.g-label-task{height:24px;display:flex;align-items:center;padding:0 10px 0 20px;font-size:10px;color:#94A3B8;border-bottom:1px solid #1E293B08;white-space:nowrap;overflow:hidden;text-overflow:ellipsis}
 
-  .trade-header { height: 36px; display: flex; align-items: center; gap: 8px; padding: 0 12px; cursor: pointer; border-bottom: 1px solid #1E293B; transition: background 0.15s; }
-  .trade-header:hover { filter: brightness(1.3); }
-  .trade-arrow { font-size: 10px; transition: transform 0.2s; display: inline-block; }
-  .trade-arrow.open { transform: rotate(90deg); }
-  .trade-name { font-size: 13px; font-weight: 700; }
-  .trade-active-badge { font-size: 9px; padding: 2px 6px; border-radius: 4px; font-weight: 700; text-transform: uppercase; letter-spacing: 0.5px; margin-left: auto; }
+/* CONTACTS VIEW */
+.contacts-list{padding:12px}
+.c-card{background:#1E293B;border-radius:14px;padding:16px;margin-bottom:10px;animation:fadeIn .25s ease}
+.c-card-cat{font-size:11px;font-weight:700;letter-spacing:1px;text-transform:uppercase;margin-bottom:8px}
+.c-card-name{font-size:17px;font-weight:700;color:#F8FAFC}
+.c-card-phone{display:inline-flex;align-items:center;gap:6px;margin-top:8px;padding:8px 16px;border-radius:10px;font-size:14px;font-family:'JetBrains Mono',monospace;font-weight:500;transition:background .15s}
+.c-card-phone:active{transform:scale(.97)}
+.c-card-company{font-size:12px;color:#475569;margin-top:8px;line-height:1.4}
+.c-card-phone svg{width:16px;height:16px;stroke:currentColor;stroke-width:2;fill:none}
 
-  .task-row-label { height: 30px; display: flex; align-items: center; padding: 0 12px 0 24px; border-bottom: 1px solid transparent; transition: background 0.1s; }
-  .task-row-label:hover { background: #1E293B; }
-  .task-row-label span { font-size: 12px; white-space: nowrap; overflow: hidden; text-overflow: ellipsis; }
-  .task-active-dot { width: 6px; height: 6px; border-radius: 50%; margin-right: 6px; flex-shrink: 0; animation: pulse 2s ease infinite; }
+/* NOTES VIEW */
+.notes-list{padding:16px}
+.note{background:#1E293B;border-radius:14px;padding:16px;margin-bottom:10px;font-size:14px;line-height:1.6;color:#CBD5E1;animation:fadeIn .25s ease}
+.note strong{color:#F59E0B}
+.note .icon{font-size:18px;margin-right:6px}
 
-  .month-header { display: flex; height: 28px; border-bottom: 1px solid #1E293B; }
-  .month-header div { display: flex; align-items: center; justify-content: center; font-size: 12px; font-weight: 700; color: #94A3B8; letter-spacing: 2px; text-transform: uppercase; }
-
-  .day-header { display: flex; height: 36px; border-bottom: 1px solid #334155; }
-  .day-cell { display: flex; flex-direction: column; align-items: center; justify-content: center; font-size: 10px; cursor: default; position: relative; }
-  .day-cell .day-num { font-family: 'JetBrains Mono', monospace; font-weight: 500; }
-  .day-cell .day-name { font-size: 9px; }
-  .day-cell.today { background: #EF444418; }
-  .day-cell.today .day-num, .day-cell.today .day-name { color: #EF4444; font-weight: 700; }
-  .day-cell.opening .opening-mark { position: absolute; top: -1px; left: 50%; transform: translateX(-50%); width: 18px; height: 3px; background: #F59E0B; border-radius: 2px; }
-  .day-cell.nonwork { background: #0D111A; }
-  .day-cell.nonwork .day-num, .day-cell.nonwork .day-name { color: #334155; }
-
-  .gantt-row { display: flex; height: 36px; border-bottom: 1px solid #1E293B; }
-  .gantt-task-row { display: flex; height: 30px; position: relative; border-bottom: 1px solid #1E293B08; }
-  .gantt-bg-cell { height: 100%; }
-
-  .task-bar { position: absolute; top: 5px; height: 20px; border-radius: 5px; transition: all 0.15s; cursor: default; }
-  .task-bar:hover { filter: brightness(1.2); }
-  .task-bar-active { animation: glow 2s ease infinite; }
-
-  .today-line-full { position: absolute; top: 0; bottom: 0; width: 2px; z-index: 10; pointer-events: none; background: #EF4444; box-shadow: 0 0 12px #EF444480, 0 0 4px #EF4444; }
-  .today-line-label { position: absolute; top: 3px; z-index: 11; pointer-events: none; background: #EF4444; color: #fff; font-size: 10px; font-weight: 700; padding: 2px 8px; border-radius: 4px; white-space: nowrap; letter-spacing: 0.5px; transform: translateX(-50%); }
-  .today-line-arrow { position: absolute; top: 20px; z-index: 11; pointer-events: none; width: 0; height: 0; border-left: 5px solid transparent; border-right: 5px solid transparent; border-top: 5px solid #EF4444; transform: translateX(-50%); }
-
-  .opening-line-full { position: absolute; top: 0; bottom: 0; width: 2px; z-index: 9; pointer-events: none; background: repeating-linear-gradient(to bottom, #F59E0B 0, #F59E0B 6px, transparent 6px, transparent 12px); opacity: 0.6; }
-  .opening-line-label { position: absolute; bottom: 4px; z-index: 11; pointer-events: none; background: #F59E0B; color: #0F172A; font-size: 9px; font-weight: 700; padding: 2px 7px; border-radius: 4px; white-space: nowrap; letter-spacing: 0.5px; transform: translateX(-50%); }
-
-  .tooltip { position: fixed; bottom: 16px; left: 50%; transform: translateX(-50%); background: #1E293B; border: 1px solid #334155; border-radius: 10px; padding: 8px 16px; font-size: 13px; color: #CBD5E1; box-shadow: 0 4px 20px #00000060; z-index: 100; animation: fadeIn 0.1s ease; display: flex; gap: 12px; align-items: center; white-space: nowrap; }
-  .tooltip .tag { font-size: 11px; padding: 2px 8px; border-radius: 4px; font-weight: 600; }
-
-  .footer { padding: 16px 24px; border-top: 1px solid #1E293B; color: #475569; font-size: 11px; line-height: 1.6; }
-  .footer strong { color: #F59E0B; }
+/* TASK DETAIL MODAL */
+.modal-bg{position:fixed;inset:0;background:#00000080;z-index:200;display:flex;align-items:flex-end;justify-content:center;animation:fadeIn .15s ease}
+.modal{background:#1E293B;border-radius:20px 20px 0 0;width:100%;max-width:500px;max-height:70vh;overflow-y:auto;padding:20px 20px calc(20px + env(safe-area-inset-bottom));animation:fadeIn .2s ease}
+.modal-handle{width:40px;height:4px;background:#475569;border-radius:2px;margin:0 auto 16px}
+.modal-title{font-size:16px;font-weight:700;color:#F8FAFC;margin-bottom:4px}
+.modal-sub{font-size:12px;color:#64748B;margin-bottom:12px}
+.modal-dates{display:flex;flex-wrap:wrap;gap:6px}
+.modal-date{font-size:11px;padding:4px 10px;border-radius:6px;font-family:'JetBrains Mono',monospace}
+.modal-date.work{background:#22C55E20;color:#22C55E}
+.modal-date.done{background:#475569;color:#64748B;text-decoration:line-through}
+.modal-date.future{background:#3B82F620;color:#60A5FA}
 </style>
 </head>
 <body>
+
 <div id="app"></div>
+
 <script>
-const TRADES = [
-  { category: "Elektroausbau", color: "#3B82F6",
-    contact: { name: "Lukas Greil", phone: "044 781 46 76", company: "Greil Elektro GmbH, Burstel 3, 8820 Wädenswil" },
-    tasks: [
-      { name: "EG und OG Elektroausbau (+Baustrom)", days: [1,2,7,8,9,10,13,14,15,16,17,23,24,27,37,38] },
-      { name: "Elektro in Wände und Decke", days: [7,8,9,10,13] },
-      { name: "Allgemeine Arbeiten", days: [14,15,16,17] },
-      { name: "Leuchten Installation", days: [23,24,27] },
-      { name: "Abschluss / Kontrolle / Abnahme", days: [37] }
-    ]},
-  { category: "Sanitär", color: "#0891B2",
-    contact: { name: "Silvan Löhrer", phone: "079 595 44 65", company: "Holzbau und Schreinerei Löhrer GmbH, Blegistrasse 3, 6340 Baar" },
-    tasks: [
-      { name: "Sanitär Zuleitung Küche", days: [1,2,37] },
-      { name: "Abschluss / Kontrolle / Abnahme", days: [37] }
-    ]},
-  { category: "Holz- / Leichtbau", color: "#8B5CF6",
-    contact: { name: "Silvan Löhrer", phone: "079 595 44 65", company: "Holzbau und Schreinerei Löhrer GmbH, Blegistrasse 3, 6340 Baar" },
-    tasks: [
-      { name: "EG und OG Holz- / Leichtbau", days: [1,2,7,8,9,10,13,14,15,16,17,29,30,34,35,36,37] },
-      { name: "EG Wand halbseitig", days: [1,2,7] },
-      { name: "EG UK abgehängte Decke", days: [1,2,7] },
-      { name: "OG UK Küche Vorwand", days: [1,2,7] },
-      { name: "Allgemeine Arbeiten", days: [8,9,10,13] },
-      { name: "Wände & Decke schliessen", days: [14,15,16,17] },
-      { name: "Kücheninstallation", days: [29,30] },
-      { name: "Bodenlegen inkl. Treppenstufen", days: [34,35,36] },
-      { name: "Abschluss / Kontrolle / Abnahme", days: [37] }
-    ]},
-  { category: "Maler und Gipser", color: "#DC2626",
-    contact: { name: "Marcel Frey", phone: "079 948 83 21", company: "Maler-Design GmbH, Kirchfeldstrasse 12, 6415 Arth" },
-    tasks: [
-      { name: "Maler und Gipserarbeiten", days: [16,17,20,21,22,37] },
-      { name: "Allgemeine Malerarbeiten", days: [16,17] },
-      { name: "Decke & Wände streichen", days: [20,21,22] },
-      { name: "Abschluss / Kontrolle / Abnahme", days: [37] }
-    ]},
-  { category: "Lüftung", color: "#059669",
-    contact: { name: "Dario Vötsch", phone: "079 890 72 96", company: "ReWert AG, Goldbrunnenstrasse 132, 8055 Zürich" },
-    tasks: [
-      { name: "OG Lüftung", days: [23,24,27,37] },
-      { name: "Abschluss / Kontrolle / Abnahme", days: [37] }
-    ]},
-  { category: "Treppe und Geländer", color: "#D97706",
-    contact: { name: "Fabian Steiner", phone: "044 784 01 88", company: "Steiner Metallbau GmbH, Obere Schwandenstrasse 10b, 8833 Samstagern" },
-    tasks: [
-      { name: "Treppe und Geländer", days: [28,29,30,37] },
-      { name: "Abschluss / Kontrolle / Abnahme", days: [37] }
-    ]},
-  { category: "Vorhang", color: "#7C3AED",
-    contact: null,
-    tasks: [
-      { name: "Vorhang Installation", days: [36,37] }
-    ]}
+// ── DATA ──
+const TRADES=[
+  {cat:"Elektroausbau",color:"#3B82F6",contact:{name:"Lukas Greil",phone:"044 781 46 76",co:"Greil Elektro GmbH, Burstel 3, 8820 Wädenswil"},tasks:[
+    {name:"EG+OG Elektroausbau (+Baustrom)",days:[1,2,7,8,9,10,13,14,15,16,17,23,24,27,37,38]},
+    {name:"Elektro in Wände und Decke",days:[7,8,9,10,13]},
+    {name:"Allgemeine Arbeiten",days:[14,15,16,17]},
+    {name:"Leuchten Installation",days:[23,24,27]},
+    {name:"Abschluss / Kontrolle / Abnahme",days:[37]}]},
+  {cat:"Sanitär",color:"#0891B2",contact:{name:"Silvan Löhrer",phone:"079 595 44 65",co:"Holzbau und Schreinerei Löhrer GmbH, Blegistrasse 3, 6340 Baar"},tasks:[
+    {name:"Sanitär Zuleitung Küche",days:[1,2,37]},
+    {name:"Abschluss / Kontrolle / Abnahme",days:[37]}]},
+  {cat:"Holz- / Leichtbau",color:"#8B5CF6",contact:{name:"Silvan Löhrer",phone:"079 595 44 65",co:"Holzbau und Schreinerei Löhrer GmbH, Blegistrasse 3, 6340 Baar"},tasks:[
+    {name:"EG+OG Holz- / Leichtbau",days:[1,2,7,8,9,10,13,14,15,16,17,29,30,34,35,36,37]},
+    {name:"EG Wand halbseitig",days:[1,2,7]},
+    {name:"EG UK abgehängte Decke",days:[1,2,7]},
+    {name:"OG UK Küche Vorwand",days:[1,2,7]},
+    {name:"Allgemeine Arbeiten",days:[8,9,10,13]},
+    {name:"Wände & Decke schliessen",days:[14,15,16,17]},
+    {name:"Kücheninstallation",days:[29,30]},
+    {name:"Bodenlegen inkl. Treppenstufen",days:[34,35,36]},
+    {name:"Abschluss / Kontrolle / Abnahme",days:[37]}]},
+  {cat:"Maler & Gipser",color:"#DC2626",contact:{name:"Marcel Frey",phone:"079 948 83 21",co:"Maler-Design GmbH, Kirchfeldstrasse 12, 6415 Arth"},tasks:[
+    {name:"Maler und Gipserarbeiten",days:[16,17,20,21,22,37]},
+    {name:"Allgemeine Malerarbeiten",days:[16,17]},
+    {name:"Decke & Wände streichen",days:[20,21,22]},
+    {name:"Abschluss / Kontrolle / Abnahme",days:[37]}]},
+  {cat:"Lüftung",color:"#059669",contact:{name:"Dario Vötsch",phone:"079 890 72 96",co:"ReWert AG, Goldbrunnenstrasse 132, 8055 Zürich"},tasks:[
+    {name:"OG Lüftung",days:[23,24,27,37]},
+    {name:"Abschluss / Kontrolle / Abnahme",days:[37]}]},
+  {cat:"Treppe & Geländer",color:"#D97706",contact:{name:"Fabian Steiner",phone:"044 784 01 88",co:"Steiner Metallbau GmbH, Obere Schwandenstrasse 10b, 8833 Samstagern"},tasks:[
+    {name:"Treppe und Geländer",days:[28,29,30,37]},
+    {name:"Abschluss / Kontrolle / Abnahme",days:[37]}]},
+  {cat:"Vorhang",color:"#7C3AED",contact:null,tasks:[
+    {name:"Vorhang Installation",days:[36,37]}]},
 ];
 
-const START = new Date(2026, 3, 1), TOTAL = 40, HOLIDAYS = [3, 6], LABOUR = 31, OPENING = 38, CELL = 32;
-const MO = ["Jan","Feb","Mär","Apr","Mai","Jun","Jul","Aug","Sep","Okt","Nov","Dez"];
-const WD = ["So","Mo","Di","Mi","Do","Fr","Sa"];
+const AUFTRAGGEBER=[
+  {name:"Nicole Schalko",phone:"076 414 08 83"},
+  {name:"Florian Schalko",phone:"079 510 38 48"},
+];
 
-function dd(d){ const dt=new Date(START); dt.setDate(dt.getDate()+d-1); return dt; }
-function isWE(d){ const w=dd(d).getDay(); return w===0||w===6; }
-function isHL(d){ return HOLIDAYS.includes(d)||d===LABOUR; }
-function isOff(d){ return isWE(d)||isHL(d); }
-function fmt(d){ const dt=dd(d); return WD[dt.getDay()]+', '+dt.getDate()+'. '+MO[dt.getMonth()]+' 2026'; }
+const START=new Date(2026,3,1),TOTAL=40,HOLIDAYS=[3,6,31],OPENING=38,CW=28;
+const MO=["Jan","Feb","Mär","Apr","Mai","Jun","Jul","Aug","Sep","Okt","Nov","Dez"];
+const WD=["So","Mo","Di","Mi","Do","Fr","Sa"];
+
+function dd(d){const t=new Date(START);t.setDate(t.getDate()+d-1);return t}
+function isWE(d){const w=dd(d).getDay();return w===0||w===6}
+function isHL(d){return HOLIDAYS.includes(d)}
+function isNW(d){return isWE(d)||isHL(d)}
+function fmt(d){const t=dd(d);return`${WD[t.getDay()]}, ${t.getDate()}. ${MO[t.getMonth()]}`}
+function fmtShort(d){const t=dd(d);return`${t.getDate()}.${t.getMonth()+1}.`}
 
 function todayNum(){
-  const t=new Date(); t.setHours(0,0,0,0);
-  const s=new Date(START); s.setHours(0,0,0,0);
-  return Math.floor((t-s)/864e5)+1;
+  const t=new Date();t.setHours(0,0,0,0);
+  const s=new Date(START);s.setHours(0,0,0,0);
+  const diff=Math.floor((t-s)/864e5)+1;
+  return(diff>=1&&diff<=TOTAL)?diff:null;
+}
+const TODAY=todayNum();
+
+function daysUntilOpening(){
+  const open=dd(OPENING);
+  const now=new Date();now.setHours(0,0,0,0);
+  return Math.max(0,Math.ceil((open-now)/864e5));
 }
 
 function spans(days){
-  if(!days.length) return [];
-  const s=[...days].sort((a,b)=>a-b), r=[]; let a=s[0],b=s[0];
-  for(let i=1;i<s.length;i++){if(s[i]<=b+3)b=s[i];else{r.push([a,b]);a=s[i];b=s[i];}}
-  r.push([a,b]); return r;
+  if(!days.length)return[];
+  const s=[...days].sort((a,b)=>a-b),r=[];
+  let a=s[0],b=s[0];
+  for(let i=1;i<s.length;i++){if(s[i]<=b+3)b=s[i];else{r.push([a,b]);a=s[i];b=s[i]}}
+  r.push([a,b]);return r;
 }
 
-function activeTrades(d){
-  return TRADES.filter(t=>t.tasks.some(tk=>tk.days.includes(d))).map(t=>({
-    trade:t, tasks:t.tasks.filter(tk=>tk.days.includes(d))
-  }));
-}
+function workDays(days){return days.filter(d=>!isNW(d))}
+function pastDays(days){if(!TODAY)return[];return workDays(days).filter(d=>d<TODAY)}
+function progress(days){const wd=workDays(days);if(!wd.length)return 0;return Math.min(100,Math.round(pastDays(days).length/wd.length*100))}
 
-let expanded=new Set(TRADES.map(t=>t.category)), showContacts=false, selTrade=null;
-const TODAY=todayNum(), inRange=TODAY>=1&&TODAY<=TOTAL;
+// ── STATE ──
+let view='timeline',expanded=new Set(TRADES.map(t=>t.cat)),modal=null;
 
+// ── ICONS ──
+const IC={
+  timeline:`<svg viewBox="0 0 24 24"><path d="M3 6h18M3 12h18M3 18h18"/></svg>`,
+  gantt:`<svg viewBox="0 0 24 24"><rect x="3" y="4" width="8" height="4" rx="1"/><rect x="7" y="10" width="10" height="4" rx="1"/><rect x="5" y="16" width="6" height="4" rx="1"/></svg>`,
+  contacts:`<svg viewBox="0 0 24 24"><path d="M17 21v-2a4 4 0 0 0-4-4H5a4 4 0 0 0-4 4v2"/><circle cx="9" cy="7" r="4"/><path d="M23 21v-2a4 4 0 0 0-3-3.87"/><path d="M16 3.13a4 4 0 0 1 0 7.75"/></svg>`,
+  notes:`<svg viewBox="0 0 24 24"><path d="M14 2H6a2 2 0 0 0-2 2v16a2 2 0 0 0 2 2h12a2 2 0 0 0 2-2V8z"/><polyline points="14 2 14 8 20 8"/></svg>`,
+  phone:`<svg viewBox="0 0 24 24"><path d="M22 16.92v3a2 2 0 0 1-2.18 2 19.79 19.79 0 0 1-8.63-3.07 19.5 19.5 0 0 1-6-6A19.79 19.79 0 0 1 2.12 4.18 2 2 0 0 1 4.11 2h3a2 2 0 0 1 2 1.72c.127.96.361 1.903.7 2.81a2 2 0 0 1-.45 2.11L8.09 9.91a16 16 0 0 0 6 6l1.27-1.27a2 2 0 0 1 2.11-.45c.907.339 1.85.573 2.81.7A2 2 0 0 1 22 16.92z"/></svg>`,
+};
+
+// ── RENDER ──
 function render(){
+  const daysLeft=daysUntilOpening();
+  const d=Math.floor(daysLeft);
   const app=document.getElementById('app');
-  const rows=[];
-  TRADES.forEach(t=>{
-    if(selTrade&&t.category!==selTrade) return;
-    rows.push({type:'h',trade:t,open:expanded.has(t.category)});
-    if(expanded.has(t.category)) t.tasks.forEach(tk=>rows.push({type:'t',task:tk,trade:t}));
-  });
 
-  const totalW=TOTAL*CELL;
-  const todayActive=inRange?activeTrades(TODAY):[];
-  const before=TODAY<1, after=TODAY>TOTAL;
-  const daysLeft=OPENING-TODAY;
+  // Header
+  let h=`<div class="hdr">
+    <div class="hdr-row">
+      <div>
+        <div class="hdr-label">Terminplan Ausbau</div>
+        <div class="hdr-title"><span class="dot"></span>theGLOWroom</div>
+        <div class="hdr-addr">Seestrasse 287a, 8804 Au ZH</div>
+      </div>
+    </div>
+    <div class="hdr-badges">
+      <div class="badge"><div class="badge-label">Schlüssel</div><div class="badge-val">01.04.</div></div>
+      <div class="badge"><div class="badge-label">Eröffnung</div><div class="badge-val gold">08.05.</div></div>
+      <div class="badge"><div class="badge-label">Noch</div><div class="badge-val gold">${d>0?d+' Tage':'Heute!'}</div></div>
+    </div>
+  </div>`;
 
-  // --- STATUS BANNER ---
-  let st='<div class="status-banner"><div class="status-date">';
-  if(before){
-    const d=1-TODAY;
-    st+=`<div class="status-date-dot future"></div><span class="status-date-text">Projekt startet in ${d} ${d===1?'Tag':'Tagen'}</span><span class="status-date-sub">— Schlüsselübergabe 01. April 2026</span>`;
-  } else if(after){
-    st+='<div class="status-date-dot done"></div><span class="status-date-text">Projekt abgeschlossen</span>';
-  } else {
-    st+=`<div class="status-date-dot live"></div><span class="status-date-text">Heute — ${fmt(TODAY)}</span>`;
-    if(isOff(TODAY)){
-      const l=isHL(TODAY)?'Feiertag':'Wochenende';
-      st+=`<span class="status-tag" style="background:#334155;color:#94A3B8;margin-left:8px">${l}</span>`;
-    }
-  }
-  st+='</div>';
+  // Views
+  let content='';
+  if(view==='timeline') content=renderTimeline();
+  else if(view==='gantt') content=renderGantt();
+  else if(view==='contacts') content=renderContacts();
+  else if(view==='notes') content=renderNotes();
 
-  if(daysLeft>0&&!after) st+=`<div style="margin-bottom:10px"><span class="status-countdown">Noch <strong>${daysLeft} Tage</strong> bis zur Eröffnung</span></div>`;
+  // Nav
+  const nav=`<nav class="nav">
+    ${navBtn('timeline','Timeline',IC.timeline)}
+    ${navBtn('gantt','Gantt',IC.gantt)}
+    ${navBtn('contacts','Kontakte',IC.contacts)}
+    ${navBtn('notes','Infos',IC.notes)}
+  </nav>`;
 
-  if(inRange&&todayActive.length>0&&!isOff(TODAY)){
-    st+='<div style="margin-bottom:6px;font-size:11px;font-weight:600;color:#64748B;text-transform:uppercase;letter-spacing:1px">Heute aktive Gewerke</div><div class="status-chips">';
-    todayActive.forEach(({trade,tasks})=>{
-      const tn=tasks.filter(t=>!t.name.includes('Abschluss')).map(t=>t.name).join(', ');
-      st+=`<div class="status-chip" style="background:${trade.color}15;border-color:${trade.color}40;color:${trade.color}">
-        <span class="chip-dot" style="background:${trade.color}"></span>${trade.category}
-        ${trade.contact?`<span class="status-chip-contact">${trade.contact.name}</span>`:''}
-        ${tn?`<span class="status-chip-tasks">— ${tn}</span>`:''}
-      </div>`;
-    });
-    st+='</div>';
-  } else if(inRange&&isOff(TODAY)){
-    st+='<div class="status-none">Heute keine Arbeiten geplant</div>';
-  } else if(before){
-    st+='<div class="status-none">Arbeiten beginnen am 01. April 2026</div>';
-  }
-  st+='</div>';
+  app.innerHTML=h+`<div class="view active">${content}</div>`+nav+(modal?renderModal():'');
+}
 
-  // --- CONTACTS ---
-  let ct='';
-  if(showContacts){
-    ct='<div class="contacts">'+TRADES.filter(t=>t.contact).map(t=>`
-      <div class="contact-card" style="border-left:3px solid ${t.color}">
-        <div class="contact-cat" style="color:${t.color}">${t.category}</div>
-        <div class="contact-name">${t.contact.name}</div>
-        <a href="tel:${t.contact.phone}" class="contact-phone">${t.contact.phone}</a>
-        ${t.contact.company?`<div class="contact-company">${t.contact.company}</div>`:''}
-      </div>`).join('')+`
-      <div class="contact-card" style="border-left:3px solid #F59E0B">
-        <div class="contact-cat" style="color:#F59E0B">Auftraggeber</div>
-        <div class="contact-name">Nicole Schalko — <span class="contact-phone">076 414 08 83</span></div>
-        <div class="contact-name" style="margin-top:2px">Florian Schalko — <span class="contact-phone">079 510 38 48</span></div>
-      </div></div>`;
-  }
+function navBtn(v,label,icon){
+  return`<button class="nav-btn ${view===v?'active':''}" onclick="switchView('${v}')">${icon}<span>${label}</span></button>`;
+}
 
-  // --- LEGEND ---
-  const leg=TRADES.map(t=>{
-    const dim=selTrade&&selTrade!==t.category;
-    return `<button class="legend-item ${dim?'dimmed':''}" onclick="tf('${t.category}')"><span class="legend-dot" style="background:${t.color}"></span>${t.category}</button>`;
-  }).join('')+(selTrade?'<button class="legend-reset" onclick="cf()">Alle zeigen</button>':'');
-
-  // --- DAY HEADERS ---
-  let dh='';
-  for(let d=1;d<=TOTAL;d++){
-    const dt=dd(d),dom=dt.getDate(),dw=WD[dt.getDay()],isT=d===TODAY;
-    const cls=[isT?'today':'',d===OPENING?'opening':'',isOff(d)?'nonwork':''].filter(Boolean).join(' ');
-    const brd=dom===30&&d<=30?'border-right:2px solid #334155;':'';
-    dh+=`<div class="day-cell ${cls}" style="width:${CELL}px;min-width:${CELL}px;${brd}" onmouseenter="stt(${d})" onmouseleave="htt()">
-      <span class="day-num">${dom}</span><span class="day-name">${dw}</span>
-      ${d===OPENING?'<div class="opening-mark"></div>':''}
+// ── TIMELINE VIEW ──
+function renderTimeline(){
+  let html='';
+  TRADES.forEach(trade=>{
+    const open=expanded.has(trade.cat);
+    const prog=progress(trade.tasks[0].days);
+    html+=`<div class="tl-section">
+      <div class="tl-cat-header" style="background:${trade.color}15" onclick="toggle('${trade.cat}')">
+        <div class="tl-cat-dot" style="background:${trade.color}"></div>
+        <div style="flex:1;min-width:0">
+          <div class="tl-cat-name" style="color:${trade.color}">${trade.cat}</div>
+          ${trade.contact?`<div class="tl-cat-contact">${trade.contact.name}</div>`:''}
+        </div>
+        <div style="width:50px;height:6px;background:#0F172A;border-radius:3px;overflow:hidden;flex-shrink:0">
+          <div style="width:${prog}%;height:100%;background:${trade.color};border-radius:3px;transition:width .4s"></div>
+        </div>
+        <span style="font-size:11px;color:${trade.color};font-weight:700;min-width:32px;text-align:right">${prog}%</span>
+        <span class="tl-cat-arrow ${open?'open':''}" style="color:${trade.color}">▶</span>
+      </div>
+      <div class="tl-tasks" style="max-height:${open?'600px':'0'};opacity:${open?1:0}">
+        ${trade.tasks.map(task=>{
+          const wd=workDays(task.days);
+          const sp=spans(task.days);
+          const firstDay=sp.length?sp[0][0]:0;
+          const lastDay=sp.length?sp[sp.length-1][1]:0;
+          const taskProg=progress(task.days);
+          const isAbschluss=task.name.includes('Abschluss');
+          return`<div class="tl-task" onclick="openModal('${trade.cat}','${task.name.replace(/'/g,"\\'")}')">
+            <div class="tl-task-name">${isAbschluss?'✓ ':''}<span>${task.name}</span></div>
+            <div class="tl-task-bar-wrap">
+              <div class="tl-task-bar" style="width:${Math.max(3,(lastDay-firstDay+1)/TOTAL*100)}%;background:${isAbschluss?`repeating-linear-gradient(135deg,${trade.color}60,${trade.color}60 2px,${trade.color}30 2px,${trade.color}30 4px)`:`linear-gradient(90deg,${trade.color}CC,${trade.color}80)`};margin-left:${(firstDay-1)/TOTAL*100}%"></div>
+            </div>
+            <div class="tl-task-dates">${fmtShort(firstDay)}–${fmtShort(lastDay)}</div>
+          </div>`;
+        }).join('')}
+      </div>
     </div>`;
-  }
+  });
+  return html;
+}
 
-  // --- TASK LABELS ---
-  let tl='<div class="month-spacer"></div><div class="day-spacer"></div>';
-  rows.forEach(r=>{
-    if(r.type==='h'){
-      const act=inRange&&!isOff(TODAY)&&r.trade.tasks.some(t=>t.days.includes(TODAY));
-      const badge=act?`<span class="trade-active-badge" style="background:${r.trade.color}30;color:${r.trade.color}">AKTIV</span>`:'';
-      tl+=`<div class="trade-header" style="background:${r.trade.color}15;border-left:3px solid ${r.trade.color}" onclick="tt('${r.trade.category}')">
-        <span class="trade-arrow ${r.open?'open':''}" style="color:${r.trade.color}">▶</span>
-        <span class="trade-name" style="color:${r.trade.color}">${r.trade.category}</span>${badge}</div>`;
-    } else {
-      const act=inRange&&!isOff(TODAY)&&r.task.days.includes(TODAY);
-      const dot=act?`<span class="task-active-dot" style="background:${r.trade.color}"></span>`:'';
-      tl+=`<div class="task-row-label" title="${r.task.name}">${dot}<span style="color:${act?'#F8FAFC':'#94A3B8'};font-weight:${act?'600':'400'}">${r.task.name}</span></div>`;
-    }
+// ── GANTT VIEW ──
+function renderGantt(){
+  const totalW=TOTAL*CW;
+  const rows=[];
+  TRADES.forEach(trade=>{
+    const open=expanded.has(trade.cat);
+    rows.push({type:'h',trade,open});
+    if(open) trade.tasks.forEach(task=>rows.push({type:'t',task,trade}));
   });
 
-  // --- GANTT ROWS ---
-  let gr=`<div class="month-header"><div style="width:${30*CELL}px;border-right:2px solid #334155">April 2026</div><div style="width:${10*CELL}px">Mai 2026</div></div>`;
-  gr+=`<div class="day-header">${dh}</div>`;
-
+  // Labels
+  let labels=`<div class="g-label-spacer-m"></div><div class="g-label-spacer-d"></div>`;
   rows.forEach(r=>{
-    let bg='';
+    if(r.type==='h') labels+=`<div class="g-label-cat" style="background:${r.trade.color}12;border-left:3px solid ${r.trade.color}" onclick="toggle('${r.trade.cat}')"><span class="tl-cat-arrow ${r.open?'open':''}" style="color:${r.trade.color};font-size:9px">▶</span><span style="color:${r.trade.color}">${r.trade.cat}</span></div>`;
+    else labels+=`<div class="g-label-task" title="${r.task.name}">${r.task.name}</div>`;
+  });
+
+  // Days
+  let dayH='';
+  for(let d=1;d<=TOTAL;d++){
+    const dt=dd(d),dom=dt.getDate(),cls=[d===TODAY?'today':'',isNW(d)?'nonwork':'',d===OPENING?'opening':''].filter(Boolean).join(' ');
+    const bdr=dom===30&&d<=30?'border-right:2px solid #334155;':'';
+    dayH+=`<div class="g-day ${cls}" style="width:${CW}px;min-width:${CW}px;${bdr}"><span class="dn">${dom}</span><span class="dw">${WD[dt.getDay()]}</span></div>`;
+  }
+
+  // Rows
+  let rowsHTML='';
+  rows.forEach(r=>{
+    let cells='';
     for(let d=1;d<=TOTAL;d++){
-      const dom=dd(d).getDate(),brd=dom===30&&d<=30?'border-right:2px solid #334155;':'';
-      let c='transparent';
-      if(d===TODAY)c='#EF444410';else if(d===OPENING)c='#F59E0B08';else if(isOff(d))c='#0D111A40';
-      bg+=`<div class="gantt-bg-cell" style="width:${CELL}px;min-width:${CELL}px;${brd}background:${c}"></div>`;
+      const dom=dd(d).getDate(),bdr=dom===30&&d<=30?'border-right:2px solid #334155;':'';
+      let bg='transparent';
+      if(d===TODAY)bg='#3B82F610';else if(d===OPENING)bg='#F59E0B08';else if(isNW(d))bg='#0D111A40';
+      cells+=`<div class="g-cell" style="width:${CW}px;min-width:${CW}px;${bdr}background:${bg}"></div>`;
     }
     if(r.type==='h'){
-      gr+=`<div class="gantt-row" style="background:${r.trade.color}08">${bg}</div>`;
+      rowsHTML+=`<div class="g-cat-row" style="background:${r.trade.color}08">${cells}</div>`;
     } else {
       const sp=spans(r.task.days);
       let bars='';
-      const isAb=r.task.name.includes('Abschluss');
-      const isAct=inRange&&!isOff(TODAY)&&r.task.days.includes(TODAY);
+      const isA=r.task.name.includes('Abschluss');
       sp.forEach(([a,b])=>{
-        const l=(a-1)*CELL+2,w=(b-a+1)*CELL-4;
-        const bg2=isAb?`repeating-linear-gradient(135deg,${r.trade.color}40,${r.trade.color}40 3px,${r.trade.color}20 3px,${r.trade.color}20 6px)`:`linear-gradient(135deg,${r.trade.color}CC,${r.trade.color}99)`;
-        bars+=`<div class="task-bar ${isAct?'task-bar-active':''}" style="left:${l}px;width:${w}px;background:${bg2};border:1px solid ${r.trade.color}60" title="${r.task.name}: ${fmt(a)} – ${fmt(b)}"></div>`;
+        const l=(a-1)*CW+1,w=(b-a+1)*CW-2;
+        const bg=isA?`repeating-linear-gradient(135deg,${r.trade.color}40,${r.trade.color}40 2px,${r.trade.color}20 2px,${r.trade.color}20 4px)`:`linear-gradient(135deg,${r.trade.color}CC,${r.trade.color}99)`;
+        bars+=`<div class="g-bar" style="left:${l}px;width:${w}px;background:${bg};border:1px solid ${r.trade.color}60"></div>`;
       });
-      gr+=`<div class="gantt-task-row">${bg}${bars}</div>`;
+      let markers='';
+      if(TODAY) markers+=`<div class="g-today-line" style="left:${(TODAY-1)*CW+CW/2-1}px"></div>`;
+      markers+=`<div class="g-open-line" style="left:${(OPENING-1)*CW+CW/2-1}px"></div>`;
+      rowsHTML+=`<div class="g-task-row">${cells}${bars}${markers}</div>`;
     }
   });
 
-  // --- TODAY & OPENING LINES (full height) ---
-  const todayX=inRange?(TODAY-1)*CELL+CELL/2:null;
-  const openX=(OPENING-1)*CELL+CELL/2;
-  let lines='';
-  if(todayX!==null){
-    lines+=`<div class="today-line-full" style="left:${todayX}px"></div>`;
-    lines+=`<div class="today-line-label" style="left:${todayX}px">HEUTE</div>`;
-    lines+=`<div class="today-line-arrow" style="left:${todayX}px"></div>`;
-  }
-  lines+=`<div class="opening-line-full" style="left:${openX}px"></div>`;
-  lines+=`<div class="opening-line-label" style="left:${openX}px">ERÖFFNUNG</div>`;
+  return`<div class="gantt-outer"><div style="display:flex"><div class="g-label-col">${labels}</div><div class="gantt-scroll" id="ganttScroll"><div style="min-width:${totalW}px">
+    <div class="gantt-months"><div style="width:${30*CW}px;border-right:2px solid #334155">April</div><div style="width:${10*CW}px">Mai</div></div>
+    <div class="gantt-days">${dayH}</div>${rowsHTML}
+  </div></div></div></div>`;
+}
 
-  app.innerHTML=`
-    <div class="header">
-      <div class="header-top">
-        <div>
-          <div class="header-label"><div class="header-dot"></div><span class="header-sub">Terminplan Mieterausbau</span></div>
-          <h1 class="header-title">theGLOWroom</h1>
-          <p class="header-addr">Seestrasse 287a, 8804 Au ZH — AuPark</p>
-        </div>
-        <div class="header-actions">
-          <div class="info-box"><div class="info-label">Schlüssel</div><div class="info-value">01.04.26</div></div>
-          <div class="info-box"><div class="info-label">Eröffnung</div><div class="info-value gold">08.05.26</div></div>
-          <button class="btn ${showContacts?'active':''}" onclick="tc()">Kontakte ${showContacts?'▲':'▼'}</button>
-        </div>
-      </div>${ct}
-    </div>
-    ${st}
-    <div class="legend">${leg}</div>
-    <div class="gantt-wrapper">
-      <div class="task-col">${tl}</div>
-      <div class="timeline-col" id="tl">
-        <div style="min-width:${totalW}px;position:relative">${gr}${lines}</div>
+// ── CONTACTS VIEW ──
+function renderContacts(){
+  let html=`<div class="contacts-list">`;
+  // Auftraggeber first
+  html+=`<div class="c-card" style="border-left:4px solid #F59E0B">
+    <div class="c-card-cat" style="color:#F59E0B">Auftraggeber</div>
+    ${AUFTRAGGEBER.map(a=>`<div style="margin-bottom:10px">
+      <div class="c-card-name">${a.name}</div>
+      <a href="tel:${a.phone.replace(/\s/g,'')}" class="c-card-phone" style="background:#F59E0B20;color:#F59E0B">${IC.phone} ${a.phone}</a>
+    </div>`).join('')}
+  </div>`;
+  
+  TRADES.filter(t=>t.contact).forEach(t=>{
+    html+=`<div class="c-card" style="border-left:4px solid ${t.color}">
+      <div class="c-card-cat" style="color:${t.color}">${t.cat}</div>
+      <div class="c-card-name">${t.contact.name}</div>
+      <a href="tel:${t.contact.phone.replace(/\s/g,'')}" class="c-card-phone" style="background:${t.color}20;color:${t.color}">${IC.phone} ${t.contact.phone}</a>
+      <div class="c-card-company">${t.contact.co}</div>
+    </div>`;
+  });
+  html+=`</div>`;
+  return html;
+}
+
+// ── NOTES VIEW ──
+function renderNotes(){
+  return`<div class="notes-list">
+    <div class="note"><span class="icon">🔑</span> Schlüsselübergabe am <strong>01.04.2026 um 12:00 Uhr</strong>. Ab dann können die Arbeiten beginnen.</div>
+    <div class="note"><span class="icon">🏗️</span> Rollgerüst wird ab <strong>02.04.</strong> von Marcel Frey bereitgestellt und steht allen zur Verfügung. Bitte untereinander koordinieren.</div>
+    <div class="note"><span class="icon">🤝</span> Wir bitten, dass sich die Gewerke untereinander abstimmen und koordinieren, auch falls sich zwischenzeitlich Optimierungen ergeben.</div>
+    <div class="note"><span class="icon">⚠️</span> <strong>WICHTIG: Der Endtermin am 07.05.2026 muss eingehalten werden.</strong></div>
+    <div class="note"><span class="icon">🎉</span> Eröffnung: <strong>08.05.2026</strong></div>
+    <div class="note" style="background:#0F172A;border:1px solid #334155"><span class="icon">📍</span> Standort: theGLOWroom, Seestrasse 287a, 8804 Au ZH — AuPark</div>
+  </div>`;
+}
+
+// ── MODAL ──
+function renderModal(){
+  if(!modal)return'';
+  const trade=TRADES.find(t=>t.cat===modal.cat);
+  if(!trade)return'';
+  const task=trade.tasks.find(t=>t.name===modal.task);
+  if(!task)return'';
+  const wd=workDays(task.days);
+  
+  return`<div class="modal-bg" onclick="closeModal(event)">
+    <div class="modal" onclick="event.stopPropagation()">
+      <div class="modal-handle"></div>
+      <div class="modal-title" style="color:${trade.color}">${task.name}</div>
+      <div class="modal-sub">${trade.cat} — ${wd.length} Arbeitstage</div>
+      <div style="font-size:12px;color:#64748B;margin-bottom:12px">Fortschritt: <strong style="color:${trade.color}">${progress(task.days)}%</strong></div>
+      <div class="modal-dates">
+        ${task.days.map(d=>{
+          const past=TODAY&&d<TODAY;
+          const today=d===TODAY;
+          const nw=isNW(d);
+          let cls=past?'done':today?'work':'future';
+          if(nw)cls='done';
+          return`<div class="modal-date ${cls}">${fmt(d)}${nw?' (frei)':''}${today?' ← heute':''}</div>`;
+        }).join('')}
       </div>
     </div>
-    <div class="footer">
-      <p>Schlüsselübergabe: 01.04.2026 um 09:00 Uhr. Rollgerüst ab 02.04. von Marcel Frey bereitgestellt.</p>
-      <p style="margin-top:4px">Gewerke bitte untereinander abstimmen und koordinieren. <strong>Endtermin 07.05.2026 muss eingehalten werden.</strong></p>
-    </div>
-    <div id="tip" class="tooltip" style="display:none"></div>`;
-
-  // Scroll to today
-  const el=document.getElementById('tl');
-  if(el&&inRange){el.scrollLeft=Math.max(0,(TODAY-1)*CELL-el.clientWidth/2);}
+  </div>`;
 }
 
-function tt(c){if(expanded.has(c))expanded.delete(c);else expanded.add(c);render();}
-function tc(){showContacts=!showContacts;render();}
-function tf(c){selTrade=selTrade===c?null:c;render();}
-function cf(){selTrade=null;render();}
-
-function stt(d){
-  const tip=document.getElementById('tip'); if(!tip) return;
-  let h='<span style="font-weight:600">'+fmt(d)+'</span>';
-  if(isOff(d)){const l=isHL(d)?'Feiertag':'Wochenende';h+='<span class="tag" style="background:#334155;color:#94A3B8">'+l+'</span>';}
-  if(d===OPENING) h+='<span class="tag" style="background:#F59E0B30;color:#F59E0B">ERÖFFNUNG</span>';
-  if(d===TODAY) h+='<span class="tag" style="background:#EF444430;color:#EF4444">Heute</span>';
-  const act=activeTrades(d);
-  if(act.length>0&&!isOff(d)){
-    h+='<span style="color:#64748B;font-size:11px;border-left:1px solid #334155;padding-left:10px;margin-left:2px">';
-    h+=act.map(a=>'<span style="color:'+a.trade.color+'">'+a.trade.category+'</span>').join(', ');
-    h+='</span>';
-  }
-  tip.innerHTML=h; tip.style.display='flex';
+// ── ACTIONS ──
+function switchView(v){view=v;render();
+  if(v==='gantt')setTimeout(()=>{
+    const el=document.getElementById('ganttScroll');
+    if(el&&TODAY)el.scrollLeft=Math.max(0,(TODAY-1)*CW-el.clientWidth/2);
+  },50);
 }
-function htt(){const tip=document.getElementById('tip');if(tip)tip.style.display='none';}
+function toggle(cat){if(expanded.has(cat))expanded.delete(cat);else expanded.add(cat);render()}
+function openModal(cat,task){modal={cat,task};render()}
+function closeModal(e){if(e.target.classList.contains('modal-bg')){modal=null;render()}}
 
+// Init
 render();
 </script>
 </body>
